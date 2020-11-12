@@ -1,4 +1,10 @@
+/** package Strukture der Klasse InputOutput **/
+
 package de.hfu;
+
+/** Ein Java Programm, bestehend aus einer Quelltextdatei, mit einer main-Methode,
+welches eine Zeichenkette von der Tastatur einliest, in Großbuchstaben umwandelt und wieder
+in die Konsole ausgibt. **/
 
 public class InputOutput {
 	 @SuppressWarnings("resource")
