@@ -27,5 +27,4 @@ public class Queue {
 		  }
 		  return queue[(head++) % maxqueuelength];
    }
-
 }
