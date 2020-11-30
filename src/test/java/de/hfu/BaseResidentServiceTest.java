@@ -85,5 +85,4 @@ public class BaseResidentServiceTest{
 		List<Resident> testFilterList = baseResidentService.getFilteredResidentsList(new Resident("", "", "", "", null));
 		assertEquals(3,testFilterList.size());
 	}
-
 }
