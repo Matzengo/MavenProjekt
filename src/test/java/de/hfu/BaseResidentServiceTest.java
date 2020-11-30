@@ -5,6 +5,7 @@ import org.junit.*;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import de.hfu.residents.domain.Resident;
@@ -84,4 +85,5 @@ public class BaseResidentServiceTest{
 		List<Resident> testFilterList = baseResidentService.getFilteredResidentsList(new Resident("", "", "", "", null));
 		assertEquals(3,testFilterList.size());
 	}
+
 }

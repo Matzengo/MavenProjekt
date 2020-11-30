@@ -18,10 +18,10 @@
 			<scope>test</scope>
 		</dependency>
 		<!-- für das Praktikum "Integrationstest" -->
-		<!-- dependency> <groupId>org.easymock</groupId> <artifactId>easymock</artifactId> 
+		<dependency> <groupId>org.easymock</groupId> <artifactId>easymock</artifactId> 
 			<version>3.6</version> <scope>test</scope> </dependency> <dependency> <groupId>org.hamcrest</groupId> 
 			<artifactId>hamcrest-library</artifactId> <version>1.3</version> <scope>test</scope> 
-			</dependency -->
+			</dependency>
 	</dependencies>
 	<reporting>
 		<plugins>
@@ -34,7 +34,8 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
+				<!-- jacoco von 0.8.2 auf 0.9.4 geändert -->
+				<version>0.8.4</version>
 			</plugin>
 		</plugins>
 	</reporting>
@@ -57,7 +58,8 @@
 			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.2</version>
+				<!-- jacoco von 0.8.2 auf 0.9.4 geändert -->
+				<version>0.8.4</version>
 				<executions>
 					<execution>
 						<id>default-prepare-agent</id>
@@ -92,11 +94,13 @@
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.22.1</version>
+					<!-- surefire von 2.22.1 auf 2.19.1 geändert -->
+					<version>2.19.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-report-plugin</artifactId>
-					<version>2.22.1</version>
+					<!-- surefire von 2.22.1 auf 2.19.1 geändert -->
+					<version>2.19.1</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-jar-plugin</artifactId>
