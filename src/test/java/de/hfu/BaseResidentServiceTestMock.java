@@ -3,14 +3,11 @@ package de.hfu;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
-import org.easymock.EasyMock;
-import org.easymock.IExpectationSetters;
 import org.junit.Before;
 import org.junit.Test;
 import static org.easymock.EasyMock.*;
@@ -20,77 +17,67 @@ import de.hfu.residents.service.BaseResidentService;
 import de.hfu.residents.service.ResidentServiceException;
 
 public class BaseResidentServiceTestMock {
-	public class TestMockResident {
-		ResidentRepository repoMock = createMock(ResidentRepository.class);
-		List<Resident> liste = new ArrayList<Resident>();
-		@Before
-		public void setup() {
-			liste.add(new Resident("Jonas", "Müller", "Hauptsrasse", "Rottweil", new Date(123456)));
-			liste.add(new Resident("Coco", "Sailer", "Heerstrasse", "Rottweil", new Date()));
-			liste.add(new Resident("Tobi", "Müller", "Heerstrasse", "Furtwangen", new Date(123456)));
-		}
-		
-		
-		@Test
-		public void testMockFilteredResidentsList() {
-			expect(repoMock.getResidents()).andReturn(liste).times(3);
-			replay(repoMock);
-			
-			BaseResidentService base = new BaseResidentService();
-			base.setResidentRepository(repoMock);
-			
-			Resident filter = new Resident();
-			filter.setFamilyName("Müller");
-			filter.setDateOfBirth(new Date(123456));
-			assertEquals(2, base.getFilteredResidentsList(filter).size());
-			assertEquals(3, base.getFilteredResidentsList(new Resident()).size());
-			filter = new Resident();
-			filter.setStreet("H*");
-			assertEquals(3, base.getFilteredResidentsList(filter).size());
-			verify(repoMock);
-		}
-		
-		@Test
-		public void testMockGetUniqueResident() throws ResidentServiceException {
-			expect(repoMock.getResidents()).andReturn(liste).times(1);
-			replay(repoMock);
-			
-			BaseResidentService base = new BaseResidentService();
-			Resident filter = new Resident();
-			filter.setGivenName("Jonas");
-			Resident control = new Resident("Jonas", "Müller", "Hauptsrasse", "Rottweil", new Date(123456));
-
-			base.setResidentRepository(repoMock);
-
-			Resident ergebnis = base.getUniqueResident(filter);
-			assertEquals(control, ergebnis);
-			verify(repoMock);
-		}
-		
-		@Test(expected = ResidentServiceException.class, timeout = 1000)
-		public void testMockExceptionUniqueResident() throws ResidentServiceException {
-			expect(repoMock.getResidents()).andReturn(liste).times(1);
-			replay(repoMock);
-			
-			BaseResidentService base = new BaseResidentService();
-			base.setResidentRepository(repoMock);
-			Resident filter = new Resident();
-			filter.setStreet("Heerstrasse");
-			base.getUniqueResident(filter);
-			verify(repoMock);
-		}
-		@Test(expected = ResidentServiceException.class, timeout = 1000)
-		public void testWildcadUniqueResident() throws ResidentServiceException {
-			expect(repoMock.getResidents()).andReturn(liste).times(1);
-			replay(repoMock);
-			
-			BaseResidentService base = new BaseResidentService();
-			base.setResidentRepository(repoMock);
-			
-			Resident filter = new Resident();
-			filter.setStreet("H*");
-			base.getUniqueResident(filter);
+	ResidentRepository repoMock = createMock(ResidentRepository.class);
+	List<Resident> rList = new ArrayList<Resident>();
+	@SuppressWarnings("unused")
+	private Resident r1;
+	
+	@Before
+	public void initialize() {
+		for(int i = 1; i <=3; i++) {
+			rList.add(new Resident(i+".Vorname", i+".Nachname", i+".Musterstraße", "Musterstadt", null));
 		}
 	}
+	
+	@Test
+	public void getUniqueResidentMockTest() throws ResidentServiceException {
+		expect(repoMock.getResidents()).andReturn(rList).times(1);
+		replay(repoMock);
+		BaseResidentService baseResidentServiceMock = new BaseResidentService();
+		baseResidentServiceMock.setResidentRepository(repoMock);
 
+		Resident unique = new Resident("1.Vorname","1.Nachname","1.Musterstraße","Musterstadt",null);
+		Resident erg = baseResidentServiceMock.getUniqueResident(unique);
+		assertThat(erg.getGivenName(), equalTo(unique.getGivenName()));
+		assertThat(erg.getFamilyName(), equalTo(unique.getFamilyName()));
+		assertThat(erg.getStreet(), equalTo(unique.getStreet()));
+		assertThat(erg.getCity(), equalTo(unique.getCity()));
+		assertThat(erg.getDateOfBirth(), equalTo(unique.getDateOfBirth()));
+		verify(repoMock);
+	}
+	
+	@Test(expected = ResidentServiceException.class, timeout = 1000)
+	public void ExceptionTestUniqueMockTest() throws ResidentServiceException {
+		expect(repoMock.getResidents()).andReturn(rList).times(1);
+		replay(repoMock);
+		BaseResidentService baseResidentServiceMock = new BaseResidentService();
+		baseResidentServiceMock.setResidentRepository(repoMock);
+		
+		baseResidentServiceMock.getUniqueResident(new Resident("TestVorname","1.Nachname","1.Musterstraße","Musterstadt",null));
+		verify(repoMock);
+	}
+	@Test(expected = ResidentServiceException.class, timeout = 1000)
+	public void EcxeptionTestWildcadMockTest() throws ResidentServiceException {
+		expect(repoMock.getResidents()).andReturn(rList).times(1);
+		replay(repoMock);
+		BaseResidentService baseResidentServiceMock = new BaseResidentService();
+		baseResidentServiceMock.setResidentRepository(repoMock);
+		
+		baseResidentServiceMock.getUniqueResident(new Resident("2*", "", "", "", null));
+		verify(repoMock);
+	}
+	
+	@Test
+	public void getFilteredResidentsListMockTest() {
+		expect(repoMock.getResidents()).andReturn(rList).times(2);
+		replay(repoMock);
+		BaseResidentService baseResidentServiceMock = new BaseResidentService();
+		baseResidentServiceMock.setResidentRepository(repoMock);
+		
+		assertThat(baseResidentServiceMock.getFilteredResidentsList(new Resident("1*", "", "", "", null)).size(), equalTo(1));
+		assertThat(baseResidentServiceMock.getFilteredResidentsList(new Resident()).size(), equalTo(3));
+		verify(repoMock);
+	}
 }
+	
+
